@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Projects | Arkadia Construction</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-logo">Arkadia<span>Construction</span></div>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 2rem; font-size: 1.2rem;">Building Excellence in South Sudan</p>
+            <div class="loader-bar">
+                <div class="loader-progress" id="loaderProgress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- Floating Particles -->
+    <div class="particles" id="particlesContainer"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Arkadia<span>Construction</span></a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li class="has-dropdown">
+                        <a href="services.html" class="nav-link">Services <i class="fas fa-chevron-down dropdown-arrow"></i></a>
+                        <ul class="dropdown" id="servicesDropdown">
+                            <li><a href="services.html#residential">Residential</a></li>
+                            <li><a href="services.html#commercial">Commercial</a></li>
+                            <li><a href="services.html#renovation">Renovation</a></li>
+                            <li><a href="services.html#planning">Planning</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="projects.html" class="nav-link active">Projects</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Page Hero -->
+    <section class="page-hero projects-bg">
+        <div class="page-hero-content">
+            <h1>Our Portfolio</h1>
+            <p>Showcasing our premium construction projects across South Sudan.</p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects-section">
+        <div class="container">
+            <h2 class="section-title fade-in">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Modern Villa Project">
+                    </div>
+                    <div class="project-info">
+                        <h3>Juba Luxury Villas</h3>
+                        <div class="project-location">
+                            <i class="fas fa-map-marker-alt"></i> Juba, South Sudan
+                        </div>
+                        <p>A collection of 8 luxury villas featuring contemporary architecture, private gardens, and premium amenities in an exclusive gated community.</p>
+                        <p><strong>Completion:</strong> 2022 | <strong>Area:</strong> 5,000 sqm</p>
+                    </div>
+                </div>
+                
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Office Building Project">
+                    </div>
+                    <div class="project-info">
+                        <h3>Arkadia Business Tower</h3>
+                        <div class="project-location">
+                            <i class="fas fa-map-marker-alt"></i> Juba, South Sudan
+                        </div>
+                        <p>A 12-story commercial tower with state-of-the-art office spaces, conference facilities, retail outlets, and underground parking.</p>
+                        <p><strong>Completion:</strong> 2021 | <strong>Floors:</strong> 12</p>
+                    </div>
+                </div>
+                
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1473&q=80" alt="Renovation Project">
+                    </div>
+                    <div class="project-info">
+                        <h3>Heritage Residence Restoration</h3>
+                        <div class="project-location">
+                            <i class="fas fa-map-marker-alt"></i> Juba, South Sudan
+                        </div>
+                        <p>Complete restoration of a historical colonial-era residence, preserving original architectural elements while integrating modern systems and amenities.</p>
+                        <p><strong>Completion:</strong> 2020 | <strong>Duration:</strong> 18 months</p>
+                    </div>
+                </div>
+                
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Warehouse Project">
+                    </div>
+                    <div class="project-info">
+                        <h3>Juba Logistics Hub</h3>
+                        <div class="project-location">
+                            <i class="fas fa-map-marker-alt"></i> Juba, South Sudan
+                        </div>
+                        <p>A 15,000 sqm logistics and distribution center with advanced storage systems, climate control, and security infrastructure.</p>
+                        <p><strong>Completion:</strong> 2023 | <strong>Area:</strong> 15,000 sqm</p>
+                    </div>
+                </div>
+                
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Apartment Building">
+                    </div>
+                    <div class="project-info">
+                        <h3>River View Apartments</h3>
+                        <div class="project-location">
+                            <i class="fas fa-map-marker-alt"></i> Juba, South Sudan
+                        </div>
+                        <p>A modern 8-story apartment complex with 32 luxury units, rooftop garden, swimming pool, and 24/7 security.</p>
+                        <p><strong>Completion:</strong> 2022 | <strong>Units:</strong> 32</p>
+                    </div>
+                </div>
+                
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Commercial Complex">
+                    </div>
+                    <div class="project-info">
+                        <h3>Central Business Plaza</h3>
+                        <div class="project-location">
+                            <i class="fas fa-map-marker-alt"></i> Juba, South Sudan
+                        </div>
+                        <p>A mixed-use commercial complex featuring office spaces, retail outlets, restaurants, and conference facilities in Juba's business district.</p>
+                        <p><strong>Completion:</strong> 2021 | <strong>Area:</strong> 8,500 sqm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">Arkadia<span>Construction</span></div>
+                    <p>Leading South Sudan's construction industry with excellence, innovation, and uncompromising quality since 2008. We build more than structures - we build communities.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="services.html"><i class="fas fa-chevron-right"></i> Our Services</a></li>
+                        <li><a href="projects.html"><i class="fas fa-chevron-right"></i> Projects</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3 class="footer-heading">Our Services</h3>
+                    <ul>
+                        <li><a href="services.html#residential"><i class="fas fa-chevron-right"></i> Residential Construction</a></li>
+                        <li><a href="services.html#commercial"><i class="fas fa-chevron-right"></i> Commercial Construction</a></li>
+                        <li><a href="services.html#renovation"><i class="fas fa-chevron-right"></i> Renovation Works</a></li>
+                        <li><a href="services.html#planning"><i class="fas fa-chevron-right"></i> Project Management</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3 class="footer-heading">Contact Info</h3>
+                    <ul>
+                        <li><a href="tel:+211929889029"><i class="fas fa-phone"></i> +211 929 889 029</a></li>
+                        <li><a href="mailto:info@arkadiaconstruction.com"><i class="fas fa-envelope"></i> info@arkadiaconstruction.com</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Juba, South Sudan</a></li>
+                        <li><a href="https://wa.me/211929889029" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp: +211 929 889 029</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2025 Arkadia Construction Company Ltd. All rights reserved. | Juba, South Sudan</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+</html>
