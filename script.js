@@ -454,3 +454,93 @@ window.addEventListener('resize', function() {
         if (servicesDropdown) servicesDropdown.classList.remove('active');
     }
 });
+
+// Enhanced Home Page Animations
+function initHomePageAnimations() {
+    // Animate stats on home page
+    const aboutStats = document.querySelectorAll('.about-stat-number');
+    
+    if (aboutStats.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    aboutStats.forEach(stat => {
+                        const originalValue = stat.textContent;
+                        const value = parseInt(originalValue.replace('+', ''));
+                        
+                        // Reset to 0
+                        stat.textContent = '0';
+                        
+                        // Animate counting
+                        let counter = 0;
+                        const increment = value / 50; // 50 steps
+                        const timer = setInterval(() => {
+                            counter += increment;
+                            if (counter >= value) {
+                                stat.textContent = originalValue;
+                                clearInterval(timer);
+                            } else {
+                                stat.textContent = Math.floor(counter) + '+';
+                            }
+                        }, 50);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        const aboutSection = document.querySelector('.about-home-section');
+        if (aboutSection) {
+            observer.observe(aboutSection);
+        }
+    }
+    
+    // Parallax effect for cards on scroll
+    function initParallaxCards() {
+        const cards = document.querySelectorAll('.service-preview-card, .project-preview-card');
+        
+        window.addEventListener('scroll', () => {
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (cardTop < windowHeight && cardTop > -card.offsetHeight) {
+                    const speed = 0.1;
+                    const yPos = -(cardTop * speed);
+                    card.style.transform = `translateY(${yPos}px)`;
+                }
+            });
+        });
+    }
+    
+    // Initialize if on home page
+    if (document.querySelector('.about-home-section')) {
+        initParallaxCards();
+    }
+}
+
+// Update the initializeWebsite function to include home page animations
+// In your existing initializeWebsite function, add this line:
+// initHomePageAnimations();
+
+// If you want to call it automatically, add it to the initializeWebsite function like this:
+function initializeWebsite() {
+    initNavigation();
+    initTypewriter();
+    initServicesDropdown();
+    initContactForm();
+    initScrollAnimations();
+    initCustomCursor();
+    createParticles();
+    initStatsCounter();
+    initBackToTop();
+    initHomePageAnimations(); // Add this line
+    
+    // Highlight current page in navigation
+    highlightCurrentPage();
+    
+    // Trigger initial scroll animations
+    window.dispatchEvent(new Event('scroll'));
+}
+
+// If you already have an initializeWebsite function, just add initHomePageAnimations(); to it
