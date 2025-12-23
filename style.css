@@ -369,7 +369,7 @@ nav ul li a:hover::after {
 .hero {
     height: 100vh;
     min-height: 600px;
-    background: url('https://images.unsplash.com/photo-1505842465776-3a05d0d4b0eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
+    background: url('assets/homes.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
