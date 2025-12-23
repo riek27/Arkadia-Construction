@@ -95,3 +95,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+
+// ===================== PAGE LOADER =====================
+const pageLoader = document.getElementById('pageLoader');
+const loaderProgress = document.getElementById('loaderProgress');
+
+if (pageLoader) {
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 1; // Increment progress
+        if (loaderProgress) loaderProgress.style.width = progress + '%';
+        if (progress >= 100) {
+            clearInterval(interval);
+            pageLoader.style.opacity = '0';
+            setTimeout(() => {
+                pageLoader.style.display = 'none';
+            }, 500); // fade out smoothly
+        }
+    }, 10); // speed of loader bar
+}
