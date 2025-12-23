@@ -206,11 +206,110 @@ nav ul li a:hover::after {
     padding: 0.75rem 1rem;
 }
 
+/* =======================
+   Mobile Menu Button
+   ======================= */
 .mobile-menu-btn {
     display: none;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1002;
+}
+
+/* Only show hamburger on mobile */
+@media (max-width: 991px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    /* Hide default nav */
+    #mainNav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 250px;
+        height: 100%;
+        background: #2c2c2c;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 2rem;
+        transition: right 0.3s ease;
+        z-index: 1001;
+    }
+
+    /* Show nav when mobile-active */
+    #mainNav.mobile-active {
+        right: 0;
+    }
+
+    #mainNav ul {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    #mainNav ul li {
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+
+    #mainNav ul li a {
+        color: #fff;
+        font-size: 1.2rem;
+        width: 100%;
+    }
+
+    /* Dropdown inside mobile menu */
+    #mainNav .has-dropdown > a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #mainNav .has-dropdown .dropdown {
+        display: none;
+        flex-direction: column;
+        padding-left: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    #mainNav .has-dropdown.open .dropdown {
+        display: flex;
+    }
+
+    #mainNav .dropdown li {
+        margin-bottom: 0.8rem;
+    }
+
+    #mainNav .dropdown li a {
+        color: #ddd;
+        font-size: 1rem;
+    }
+
+    /* Overlay */
+    .mobile-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        transition: opacity 0.3s ease;
+    }
+
+    .mobile-overlay.active {
+        display: block;
+    }
+
+    /* Prevent body scroll when menu open */
+    body.no-scroll {
+        overflow: hidden;
+    }
 }
 
 /* ==========================
