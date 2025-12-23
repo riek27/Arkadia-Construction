@@ -1,47 +1,46 @@
-// =========================
+// ===========================
 // Page Loader
-// =========================
+// ===========================
 window.addEventListener('load', () => {
     const loader = document.getElementById('pageLoader');
     const progress = document.getElementById('loaderProgress');
+
     let width = 0;
     const interval = setInterval(() => {
+        width += 1;
+        progress.style.width = width + '%';
         if (width >= 100) {
             clearInterval(interval);
-            loader.style.opacity = 0;
-            setTimeout(() => loader.style.display = 'none', 600);
-        } else {
-            width++;
-            progress.style.width = width + '%';
+            loader.classList.add('loaded');
+            setTimeout(() => loader.style.display = 'none', 500);
         }
     }, 15);
 });
 
-// =========================
+// ===========================
 // Custom Cursor
-// =========================
+// ===========================
 const cursor = document.getElementById('cursor');
 const follower = document.getElementById('cursorFollower');
 
-let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
-
 document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+    cursor.style.top = e.clientY + 'px';
+    cursor.style.left = e.clientX + 'px';
 });
 
+let posX = 0, posY = 0;
 function animateFollower() {
-    posX += (mouseX - posX) * 0.1;
-    posY += (mouseY - posY) * 0.1;
-    follower.style.transform = `translate(${posX}px, ${posY}px)`;
+    posX += (event.clientX - posX) * 0.1;
+    posY += (event.clientY - posY) * 0.1;
+    follower.style.top = posY + 'px';
+    follower.style.left = posX + 'px';
     requestAnimationFrame(animateFollower);
 }
 animateFollower();
 
-// =========================
+// ===========================
 // Mobile Menu Toggle
-// =========================
+// ===========================
 const mobileBtn = document.getElementById('mobileMenuBtn');
 const nav = document.getElementById('mainNav');
 const overlay = document.getElementById('mobileOverlay');
@@ -49,121 +48,105 @@ const overlay = document.getElementById('mobileOverlay');
 mobileBtn.addEventListener('click', () => {
     nav.classList.toggle('active');
     overlay.classList.toggle('active');
+    document.body.classList.toggle('no-scroll');
 });
 
 overlay.addEventListener('click', () => {
     nav.classList.remove('active');
     overlay.classList.remove('active');
+    document.body.classList.remove('no-scroll');
 });
 
-// =========================
-// Dropdown Menu
-// =========================
-document.querySelectorAll('.has-dropdown > .nav-link').forEach(link => {
-    link.addEventListener('click', e => {
-        e.preventDefault();
-        const dropdown = link.nextElementSibling;
-        dropdown.classList.toggle('active');
-        dropdown.style.maxHeight = dropdown.classList.contains('active') ? dropdown.scrollHeight + 'px' : '0';
+document.querySelectorAll('#mainNav a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (nav.classList.contains('active')) {
+            nav.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
     });
 });
 
-// =========================
-// Back to Top Button
-// =========================
+// ===========================
+// Dropdown Menu Toggle
+// ===========================
+document.querySelectorAll('.has-dropdown > a').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault(); // prevent redirect
+        const dropdown = link.nextElementSibling;
+        dropdown.classList.toggle('open');
+        link.classList.toggle('active');
+    });
+});
+
+// ===========================
+// Back To Top
+// ===========================
 const backToTop = document.getElementById('backToTop');
 window.addEventListener('scroll', () => {
-    backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+    if (window.scrollY > 300) backToTop.classList.add('show');
+    else backToTop.classList.remove('show');
 });
+
 backToTop.addEventListener('click', e => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// =========================
-// Hero Typing Effect
-// =========================
-const typeText = document.querySelector('.page-hero-content p');
-const phrases = [
-    "Building excellence in South Sudan since 2008 with quality, integrity, and innovation.",
-    "Delivering premium residential, commercial, and infrastructure projects."
-];
-let phraseIndex = 0;
-let letterIndex = 0;
-let typingSpeed = 50;
-let erasingSpeed = 30;
-let delayBetweenPhrases = 2000;
-
-function type() {
-    if (letterIndex < phrases[phraseIndex].length) {
-        typeText.textContent += phrases[phraseIndex][letterIndex];
-        letterIndex++;
-        setTimeout(type, typingSpeed);
-    } else {
-        setTimeout(erase, delayBetweenPhrases);
-    }
+// ===========================
+// Typing Effect (Hero Subtext)
+// ===========================
+function typeEffect(element, speed = 100) {
+    const text = element.textContent;
+    element.textContent = '';
+    let i = 0;
+    const interval = setInterval(() => {
+        element.textContent += text.charAt(i);
+        i++;
+        if (i >= text.length) clearInterval(interval);
+    }, speed);
 }
 
-function erase() {
-    if (letterIndex > 0) {
-        typeText.textContent = phrases[phraseIndex].substring(0, letterIndex - 1);
-        letterIndex--;
-        setTimeout(erase, erasingSpeed);
-    } else {
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-        setTimeout(type, typingSpeed);
-    }
-}
-document.addEventListener('DOMContentLoaded', type);
+document.querySelectorAll('.page-hero-content p').forEach(p => typeEffect(p, 50));
 
-// =========================
-// Service Accordion
-// =========================
-document.querySelectorAll('.service-header').forEach(header => {
-    header.addEventListener('click', () => {
-        const content = header.nextElementSibling;
-        const arrow = header.querySelector('.service-arrow');
-        if(content.style.maxHeight) {
-            content.style.maxHeight = null;
-            arrow.style.transform = 'rotate(0deg)';
-        } else {
-            document.querySelectorAll('.service-content').forEach(c => c.style.maxHeight = null);
-            document.querySelectorAll('.service-arrow').forEach(a => a.style.transform = 'rotate(0deg)');
-            content.style.maxHeight = content.scrollHeight + "px";
-            arrow.style.transform = 'rotate(180deg)';
-        }
-    });
-});
-
-// =========================
+// ===========================
 // Stats Counter Animation
-// =========================
-function animateStats() {
-    const counters = document.querySelectorAll('.stat-number');
-    counters.forEach(counter => {
-        const updateCount = () => {
-            const target = +counter.getAttribute('data-count');
-            const current = +counter.innerText;
-            const increment = target / 200;
-            if(current < target) {
-                counter.innerText = Math.ceil(current + increment);
-                setTimeout(updateCount, 20);
-            } else {
-                counter.innerText = target;
-            }
-        };
-        updateCount();
-    });
+// ===========================
+const stats = document.querySelectorAll('.stat-number');
+const statsSection = document.querySelector('.about-stats');
+
+function countUp(el, target) {
+    let count = 0;
+    const increment = target / 200; // smoother animation
+    const interval = setInterval(() => {
+        count += increment;
+        el.textContent = Math.floor(count);
+        if (count >= target) {
+            el.textContent = target;
+            clearInterval(interval);
+        }
+    }, 10);
 }
 
-let statsSection = document.querySelector('.about-stats');
 let statsStarted = false;
 window.addEventListener('scroll', () => {
-    if(statsSection && !statsStarted) {
-        const rect = statsSection.getBoundingClientRect();
-        if(rect.top < window.innerHeight) {
-            animateStats();
-            statsStarted = true;
-        }
+    if (!statsStarted && statsSection && window.scrollY + window.innerHeight > statsSection.offsetTop) {
+        stats.forEach(stat => {
+            countUp(stat, parseInt(stat.dataset.count));
+        });
+        statsStarted = true;
     }
 });
+
+// ===========================
+// Optional: Floating Particles
+// ===========================
+const particlesContainer = document.getElementById('particlesContainer');
+for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    particle.style.left = `${Math.random() * 100}%`;
+    particle.style.animationDuration = `${2 + Math.random() * 3}s`;
+    particle.style.width = particle.style.height = `${5 + Math.random() * 10}px`;
+    particlesContainer.appendChild(particle);
+}
