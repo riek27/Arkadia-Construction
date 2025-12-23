@@ -1,38 +1,43 @@
-// Enhanced Page Loader
-document.addEventListener('DOMContentLoaded', function() {
-    const pageLoader = document.getElementById('pageLoader');
-    
-    if (pageLoader) {
-        const loaderProgress = document.getElementById('loaderProgress');
-        
-        // Simulate loading progress
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 15 + 5;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-                
-                // Hide loader after a short delay
-                setTimeout(() => {
-                    pageLoader.style.opacity = '0';
-                    pageLoader.style.visibility = 'hidden';
-                    
-                    // Initialize everything after loader is gone
-                    setTimeout(initializeWebsite, 300);
-                }, 500);
-            }
-            if (loaderProgress) {
-                loaderProgress.style.width = `${progress}%`;
-            }
-        }, 150);
-    } else {
-        // If no loader, initialize immediately
-        initializeWebsite();
-    }
+// ==============================
+// Arkadia Construction - Main JS
+// ==============================
+
+// Wait until DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    handlePageLoader();
 });
 
-// Initialize all website components
+// ==============================
+// Page Loader
+// ==============================
+function handlePageLoader() {
+    const pageLoader = document.getElementById('pageLoader');
+    if (!pageLoader) {
+        initializeWebsite();
+        return;
+    }
+
+    const loaderProgress = document.getElementById('loaderProgress');
+    let progress = 0;
+
+    const interval = setInterval(() => {
+        progress += Math.random() * 15 + 5;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            setTimeout(() => {
+                pageLoader.style.opacity = '0';
+                pageLoader.style.visibility = 'hidden';
+                setTimeout(initializeWebsite, 300);
+            }, 500);
+        }
+        if (loaderProgress) loaderProgress.style.width = `${progress}%`;
+    }, 150);
+}
+
+// ==============================
+// Initialize All Website Components
+// ==============================
 function initializeWebsite() {
     initNavigation();
     initTypewriter();
@@ -43,176 +48,141 @@ function initializeWebsite() {
     createParticles();
     initStatsCounter();
     initBackToTop();
-    
-    // Highlight current page in navigation
+    initHomePageAnimations();
     highlightCurrentPage();
-    
-    // Trigger initial scroll animations
     window.dispatchEvent(new Event('scroll'));
 }
 
-// Highlight current page in navigation
+// ==============================
+// Highlight Current Navigation Link
+// ==============================
 function highlightCurrentPage() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    navLinks.forEach(link => {
-        const linkHref = link.getAttribute('href');
-        if (linkHref === currentPage || 
-            (currentPage === '' && linkHref === 'index.html') ||
-            (currentPage === 'index.html' && linkHref === '')) {
+    document.querySelectorAll('.nav-link').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage || (currentPage === '' && href === 'index.html')) {
             link.classList.add('active');
-        } else {
-            link.classList.remove('active');
-        }
+        } else link.classList.remove('active');
     });
 }
 
-// Enhanced Navigation System
+// ==============================
+// Navigation
+// ==============================
 function initNavigation() {
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mainNav = document.getElementById('mainNav');
-    const mobileOverlay = document.getElementById('mobileOverlay');
-    const servicesDropdown = document.getElementById('servicesDropdown');
-    const hasDropdown = document.querySelector('.has-dropdown');
-    const dropdownToggle = hasDropdown ? hasDropdown.querySelector('.nav-link') : null;
-    
-    // Mobile menu toggle
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', function(e) {
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const nav = document.getElementById('mainNav');
+    const overlay = document.getElementById('mobileOverlay');
+    const dropdown = document.getElementById('servicesDropdown');
+    const dropdownToggle = document.querySelector('.has-dropdown .nav-link');
+
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', e => {
             e.stopPropagation();
-            mainNav.classList.toggle('active');
-            if (mobileOverlay) mobileOverlay.classList.toggle('active');
-            this.innerHTML = mainNav.classList.contains('active') ? 
-                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            nav.classList.toggle('active');
+            overlay?.classList.toggle('active');
+            mobileBtn.innerHTML = nav.classList.contains('active')
+                ? '<i class="fas fa-times"></i>'
+                : '<i class="fas fa-bars"></i>';
         });
     }
-    
-    // Close mobile menu when clicking overlay
-    if (mobileOverlay) {
-        mobileOverlay.addEventListener('click', function() {
-            mainNav.classList.remove('active');
-            this.classList.remove('active');
-            if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            if (servicesDropdown) servicesDropdown.classList.remove('active');
-        });
-    }
-    
-    // Handle dropdown toggle on mobile
-    if (dropdownToggle) {
-        dropdownToggle.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768 && servicesDropdown) {
-                e.preventDefault();
-                e.stopPropagation();
-                servicesDropdown.classList.toggle('active');
-            }
-        });
-    }
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.has-dropdown') && window.innerWidth > 768 && servicesDropdown) {
-            servicesDropdown.classList.remove('active');
+
+    overlay?.addEventListener('click', () => {
+        nav.classList.remove('active');
+        overlay.classList.remove('active');
+        mobileBtn && (mobileBtn.innerHTML = '<i class="fas fa-bars"></i>');
+        dropdown?.classList.remove('active');
+    });
+
+    dropdownToggle?.addEventListener('click', e => {
+        if (window.innerWidth <= 768 && dropdown) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
         }
     });
-    
-    // Close mobile menu when clicking a link
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
+
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.has-dropdown') && window.innerWidth > 768) {
+            dropdown?.classList.remove('active');
+        }
+    });
+
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', () => {
             if (window.innerWidth <= 768) {
-                mainNav.classList.remove('active');
-                if (mobileOverlay) mobileOverlay.classList.remove('active');
-                if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                if (servicesDropdown) servicesDropdown.classList.remove('active');
+                nav.classList.remove('active');
+                overlay?.classList.remove('active');
+                mobileBtn && (mobileBtn.innerHTML = '<i class="fas fa-bars"></i>');
+                dropdown?.classList.remove('active');
             }
         });
     });
 }
 
-// Enhanced Typewriter Effect (for home page only)
+// ==============================
+// Typewriter Effect
+// ==============================
 function initTypewriter() {
-    const typewriterText = document.getElementById('typewriterText');
-    const typewriterCursor = document.getElementById('typewriterCursor');
-    
-    // Only run if on home page
-    if (!typewriterText || !typewriterCursor) return;
-    
+    const textEl = document.getElementById('typewriterText');
+    const cursorEl = document.getElementById('typewriterCursor');
+    if (!textEl || !cursorEl) return;
+
     const lines = [
         "Building Your Dream Home",
-        "Your Trusted Construction Company in South Sudan", 
+        "Your Trusted Construction Company in South Sudan",
         "Quality. Strength. Reliability.",
         "Transforming Visions Into Reality",
         "Excellence in Every Project"
     ];
-    
-    let currentLine = 0;
-    let currentChar = 0;
-    let isDeleting = false;
-    let isPaused = false;
-    
+
+    let line = 0, char = 0, deleting = false;
+
     function type() {
-        if (isPaused) return;
-        
-        const currentText = lines[currentLine];
-        
-        if (!isDeleting && currentChar <= currentText.length) {
-            // Typing forward
-            typewriterText.textContent = currentText.substring(0, currentChar);
-            currentChar++;
-            setTimeout(type, 80 + Math.random() * 40);
-        } else if (isDeleting && currentChar >= 0) {
-            // Deleting
-            typewriterText.textContent = currentText.substring(0, currentChar);
-            currentChar--;
-            setTimeout(type, 40);
-        } else if (!isDeleting && currentChar > currentText.length) {
-            // Finished typing, pause then start deleting
-            isDeleting = true;
-            isPaused = true;
-            setTimeout(() => {
-                isPaused = false;
+        const currentText = lines[line];
+        if (!deleting) {
+            textEl.textContent = currentText.substring(0, char);
+            char++;
+            if (char > currentText.length) {
+                deleting = true;
+                setTimeout(type, 1500);
+                return;
+            }
+        } else {
+            textEl.textContent = currentText.substring(0, char);
+            char--;
+            if (char < 0) {
+                deleting = false;
+                line = (line + 1) % lines.length;
                 setTimeout(type, 500);
-            }, 1500);
-        } else if (isDeleting && currentChar < 0) {
-            // Finished deleting, move to next line
-            isDeleting = false;
-            currentLine = (currentLine + 1) % lines.length;
-            currentChar = 0;
-            isPaused = true;
-            setTimeout(() => {
-                isPaused = false;
-                setTimeout(type, 500);
-            }, 500);
+                return;
+            }
         }
+        setTimeout(type, deleting ? 40 : 80 + Math.random() * 40);
     }
-    
-    // Start typing after a delay
+
     setTimeout(type, 1000);
 }
 
-// Enhanced Services Dropdown System
+// ==============================
+// Services Dropdown
+// ==============================
 function initServicesDropdown() {
-    const serviceHeaders = document.querySelectorAll('.service-header');
-    
-    serviceHeaders.forEach(header => {
-        header.addEventListener('click', function() {
-            const content = this.nextElementSibling;
-            const isActive = this.classList.contains('active');
-            
-            // Close all other service items
-            serviceHeaders.forEach(h => {
-                if (h !== this) {
+    const headers = document.querySelectorAll('.service-header');
+    headers.forEach(header => {
+        header.addEventListener('click', () => {
+            const content = header.nextElementSibling;
+            const isActive = header.classList.contains('active');
+
+            headers.forEach(h => {
+                if (h !== header) {
                     h.classList.remove('active');
-                    const otherContent = h.nextElementSibling;
-                    otherContent.classList.remove('active');
-                    otherContent.style.maxHeight = null;
+                    h.nextElementSibling.classList.remove('active');
+                    h.nextElementSibling.style.maxHeight = null;
                 }
             });
-            
-            // Toggle current service item
-            this.classList.toggle('active');
-            
+
+            header.classList.toggle('active');
             if (!isActive) {
                 content.classList.add('active');
                 content.style.maxHeight = content.scrollHeight + "px";
@@ -224,323 +194,233 @@ function initServicesDropdown() {
     });
 }
 
-// Enhanced Contact Form
+// ==============================
+// Contact Form
+// ==============================
 function initContactForm() {
-    const contactForm = document.getElementById('contactForm');
-    
-    if (!contactForm) return;
-    
-    contactForm.addEventListener('submit', function(e) {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+
+    form.addEventListener('submit', e => {
         e.preventDefault();
-        
-        // Get form data
-        const formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            message: document.getElementById('message').value
+        const data = {
+            name: form.querySelector('#name').value.trim(),
+            email: form.querySelector('#email').value.trim(),
+            phone: form.querySelector('#phone').value.trim(),
+            message: form.querySelector('#message').value.trim()
         };
-        
-        // Form validation
-        if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+
+        if (!data.name || !data.email || !data.phone || !data.message) {
             alert('Please fill in all fields before submitting.');
             return;
         }
-        
-        // Show success message with animation
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        
-        submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
-        submitBtn.style.backgroundColor = '#4CAF50';
-        
-        // In a real implementation, you would send this data to a server
-        console.log('Form submitted:', formData);
-        
-        // Reset form after 3 seconds
+
+        const btn = form.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+        btn.style.backgroundColor = '#4CAF50';
+        console.log('Form submitted:', data);
+
         setTimeout(() => {
-            contactForm.reset();
-            submitBtn.innerHTML = originalText;
-            submitBtn.style.backgroundColor = '';
+            form.reset();
+            btn.innerHTML = originalText;
+            btn.style.backgroundColor = '';
         }, 3000);
     });
 }
 
-// Enhanced Scroll Animations
+// ==============================
+// Scroll Animations
+// ==============================
 function initScrollAnimations() {
-    const fadeElements = document.querySelectorAll('.fade-in');
-    
-    function checkScroll() {
-        fadeElements.forEach(element => {
-            const elementTop = element.getBoundingClientRect().top;
-            const windowHeight = window.innerHeight;
-            
-            if (elementTop < windowHeight - 100) {
-                element.classList.add('visible');
-            }
+    const elements = document.querySelectorAll('.fade-in');
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
         });
-    }
-    
-    // Check on load and scroll
-    window.addEventListener('scroll', checkScroll);
-    checkScroll(); // Initial check
+    }, { threshold: 0.1 });
+
+    elements.forEach(el => observer.observe(el));
 }
 
-// Enhanced Custom Cursor
+// ==============================
+// Custom Cursor
+// ==============================
 function initCustomCursor() {
     const cursor = document.getElementById('cursor');
-    const cursorFollower = document.getElementById('cursorFollower');
-    
-    // Only enable custom cursor on desktop
-    if (window.innerWidth > 768 && cursor && cursorFollower) {
-        document.addEventListener('mousemove', function(e) {
+    const follower = document.getElementById('cursorFollower');
+
+    if (!cursor || !follower) return;
+
+    if (window.innerWidth > 768) {
+        document.addEventListener('mousemove', e => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
-            
-            cursorFollower.style.left = e.clientX + 'px';
-            cursorFollower.style.top = e.clientY + 'px';
+            follower.style.left = e.clientX + 'px';
+            follower.style.top = e.clientY + 'px';
         });
-        
-        // Add hover effect to interactive elements
-        const interactiveElements = document.querySelectorAll('a, button, .service-header, .project-card, .btn, .contact-item, .feature-card, .stat-item');
-        
-        interactiveElements.forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                cursor.classList.add('hover');
-                cursorFollower.style.width = '60px';
-                cursorFollower.style.height = '60px';
+
+        document.querySelectorAll('a, button, .service-header, .project-card, .btn, .contact-item, .feature-card, .stat-item')
+            .forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hover');
+                    follower.style.width = '60px';
+                    follower.style.height = '60px';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hover');
+                    follower.style.width = '40px';
+                    follower.style.height = '40px';
+                });
             });
-            
-            element.addEventListener('mouseleave', () => {
-                cursor.classList.remove('hover');
-                cursorFollower.style.width = '40px';
-                cursorFollower.style.height = '40px';
-            });
-        });
-    } else if (cursor && cursorFollower) {
-        // Hide custom cursor on mobile
+    } else {
         cursor.style.display = 'none';
-        cursorFollower.style.display = 'none';
+        follower.style.display = 'none';
     }
 }
 
-// Enhanced Floating Particles
+// ==============================
+// Floating Particles
+// ==============================
 function createParticles() {
-    const particlesContainer = document.getElementById('particlesContainer');
-    if (!particlesContainer) return;
-    
-    const particleCount = window.innerWidth > 768 ? 40 : 15;
-    
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Random size and position
-        const size = Math.random() * 100 + 20;
-        const posX = Math.random() * 100;
-        const posY = Math.random() * 100;
-        
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${posX}%`;
-        particle.style.top = `${posY}%`;
-        particle.style.opacity = Math.random() * 0.1 + 0.05;
-        
-        // Random animation
+    const container = document.getElementById('particlesContainer');
+    if (!container) return;
+
+    const count = window.innerWidth > 768 ? 40 : 15;
+    container.innerHTML = '';
+
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 80 + 20;
+        p.style.width = `${size}px`;
+        p.style.height = `${size}px`;
+        p.style.left = `${Math.random() * 100}%`;
+        p.style.top = `${Math.random() * 100}%`;
+        p.style.opacity = Math.random() * 0.1 + 0.05;
         const duration = Math.random() * 30 + 20;
         const delay = Math.random() * 10;
-        particle.style.animation = `float ${duration}s ${delay}s infinite linear`;
-        
-        particlesContainer.appendChild(particle);
+        p.style.animation = `float ${duration}s ${delay}s infinite linear`;
+        container.appendChild(p);
     }
-    
-    // Add keyframes for floating animation
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = `
+
+    if (!document.getElementById('particlesAnimation')) {
+        const style = document.createElement('style');
+        style.id = 'particlesAnimation';
+        style.textContent = `
         @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(90deg); }
-            50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(180deg); }
-            75% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(270deg); }
-            100% { transform: translate(0, 0) rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(styleSheet);
+            0% { transform: translate(0,0) rotate(0deg); }
+            25% { transform: translate(${Math.random()*100-50}px, ${Math.random()*100-50}px) rotate(90deg); }
+            50% { transform: translate(${Math.random()*100-50}px, ${Math.random()*100-50}px) rotate(180deg); }
+            75% { transform: translate(${Math.random()*100-50}px, ${Math.random()*100-50}px) rotate(270deg); }
+            100% { transform: translate(0,0) rotate(360deg); }
+        }`;
+        document.head.appendChild(style);
+    }
 }
 
-// Enhanced Stats Counter Animation
+// ==============================
+// Stats Counter
+// ==============================
 function initStatsCounter() {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    
-    function startCounting(element) {
-        const target = parseInt(element.getAttribute('data-count'));
-        const duration = 2000;
-        const startTime = Date.now();
-        
-        function updateCounter() {
-            const currentTime = Date.now();
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            // Easing function for smooth animation
-            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-            
-            const currentValue = Math.floor(easeOutQuart * target);
-            element.textContent = currentValue;
-            
-            if (progress < 1) {
-                requestAnimationFrame(updateCounter);
-            } else {
-                element.textContent = target;
-            }
-        }
-        
-        requestAnimationFrame(updateCounter);
-    }
-    
-    // Start counting when stats are in view
-    const observer = new IntersectionObserver((entries) => {
+    const numbers = document.querySelectorAll('.stat-number');
+    const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                startCounting(entry.target);
+                countUp(entry.target);
                 observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.5 });
-    
-    statNumbers.forEach(stat => {
-        observer.observe(stat);
-    });
-}
 
-// Back to Top Button
-function initBackToTop() {
-    const backToTop = document.getElementById('backToTop');
-    
-    if (!backToTop) return;
-    
-    window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-            backToTop.classList.add('active');
-        } else {
-            backToTop.classList.remove('active');
-        }
-    });
-    
-    backToTop.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
-}
+    numbers.forEach(n => observer.observe(n));
 
-// Handle window resize
-window.addEventListener('resize', function() {
-    // Reinitialize custom cursor on resize
-    initCustomCursor();
-    
-    // Close mobile menu when resizing to desktop
-    if (window.innerWidth > 768) {
-        const mainNav = document.getElementById('mainNav');
-        const mobileOverlay = document.getElementById('mobileOverlay');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const servicesDropdown = document.getElementById('servicesDropdown');
-        
-        if (mainNav) mainNav.classList.remove('active');
-        if (mobileOverlay) mobileOverlay.classList.remove('active');
-        if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        if (servicesDropdown) servicesDropdown.classList.remove('active');
+    function countUp(el) {
+        const target = parseInt(el.dataset.count);
+        const duration = 2000;
+        let start = 0;
+        const step = () => {
+            const progress = Math.min((Date.now() - start) / duration, 1);
+            const value = Math.floor(progress * target);
+            el.textContent = value;
+            if (progress < 1) requestAnimationFrame(step);
+            else el.textContent = target;
+        };
+        start = Date.now();
+        requestAnimationFrame(step);
     }
-});
+}
 
-// Enhanced Home Page Animations
+// ==============================
+// Back to Top Button
+// ==============================
+function initBackToTop() {
+    const btn = document.getElementById('backToTop');
+    if (!btn) return;
+
+    window.addEventListener('scroll', () => {
+        btn.classList.toggle('active', window.pageYOffset > 300);
+    });
+
+    btn.addEventListener('click', e => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+// ==============================
+// Home Page Animations
+// ==============================
 function initHomePageAnimations() {
-    // Animate stats on home page
-    const aboutStats = document.querySelectorAll('.about-stat-number');
-    
-    if (aboutStats.length > 0) {
-        const observer = new IntersectionObserver((entries) => {
+    const stats = document.querySelectorAll('.about-stat-number');
+    if (stats.length) {
+        const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    aboutStats.forEach(stat => {
-                        const originalValue = stat.textContent;
-                        const value = parseInt(originalValue.replace('+', ''));
-                        
-                        // Reset to 0
-                        stat.textContent = '0';
-                        
-                        // Animate counting
-                        let counter = 0;
-                        const increment = value / 50; // 50 steps
-                        const timer = setInterval(() => {
-                            counter += increment;
-                            if (counter >= value) {
-                                stat.textContent = originalValue;
-                                clearInterval(timer);
-                            } else {
-                                stat.textContent = Math.floor(counter) + '+';
-                            }
-                        }, 50);
-                    });
+                    stats.forEach(stat => animateStat(stat));
                     observer.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.5 });
-        
-        const aboutSection = document.querySelector('.about-home-section');
-        if (aboutSection) {
-            observer.observe(aboutSection);
-        }
+
+        const section = document.querySelector('.about-home-section');
+        if (section) observer.observe(section);
     }
-    
-    // Parallax effect for cards on scroll
-    function initParallaxCards() {
-        const cards = document.querySelectorAll('.service-preview-card, .project-preview-card');
-        
-        window.addEventListener('scroll', () => {
-            cards.forEach(card => {
-                const cardTop = card.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                
-                if (cardTop < windowHeight && cardTop > -card.offsetHeight) {
-                    const speed = 0.1;
-                    const yPos = -(cardTop * speed);
-                    card.style.transform = `translateY(${yPos}px)`;
-                }
-            });
+
+    const cards = document.querySelectorAll('.service-preview-card, .project-preview-card');
+    window.addEventListener('scroll', () => {
+        cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                card.style.transform = `translateY(${-rect.top * 0.1}px)`;
+            }
         });
-    }
-    
-    // Initialize if on home page
-    if (document.querySelector('.about-home-section')) {
-        initParallaxCards();
+    });
+
+    function animateStat(stat) {
+        const value = parseInt(stat.textContent.replace('+',''));
+        let counter = 0;
+        const step = value / 50;
+        const timer = setInterval(() => {
+            counter += step;
+            if (counter >= value) {
+                stat.textContent = value + '+';
+                clearInterval(timer);
+            } else stat.textContent = Math.floor(counter) + '+';
+        }, 50);
     }
 }
 
-// Update the initializeWebsite function to include home page animations
-// In your existing initializeWebsite function, add this line:
-// initHomePageAnimations();
-
-// If you want to call it automatically, add it to the initializeWebsite function like this:
-function initializeWebsite() {
-    initNavigation();
-    initTypewriter();
-    initServicesDropdown();
-    initContactForm();
-    initScrollAnimations();
+// ==============================
+// Window Resize
+// ==============================
+window.addEventListener('resize', () => {
     initCustomCursor();
-    createParticles();
-    initStatsCounter();
-    initBackToTop();
-    initHomePageAnimations(); // Add this line
-    
-    // Highlight current page in navigation
-    highlightCurrentPage();
-    
-    // Trigger initial scroll animations
-    window.dispatchEvent(new Event('scroll'));
-}
-
-// If you already have an initializeWebsite function, just add initHomePageAnimations(); to it
+    if (window.innerWidth > 768) {
+        document.getElementById('mainNav')?.classList.remove('active');
+        document.getElementById('mobileOverlay')?.classList.remove('active');
+        document.getElementById('mobileMenuBtn') && (document.getElementById('mobileMenuBtn').innerHTML = '<i class="fas fa-bars"></i>');
+        document.getElementById('servicesDropdown')?.classList.remove('active');
+    }
+});
