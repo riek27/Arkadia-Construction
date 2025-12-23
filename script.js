@@ -1,92 +1,74 @@
+// ================= FULL SCRIPT.JS =================
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ===================== HERO TYPING =====================
-    const typewriterText = document.getElementById('typewriterText');
-    const typewriterCursor = document.getElementById('typewriterCursor');
+    // ================= PAGE LOADER =================
+    const pageLoader = document.getElementById('pageLoader');
+    const loaderProgress = document.getElementById('loaderProgress');
 
-    if (typewriterText) {
-        const text = "Delivering Premium Construction Across South Sudan";
-        let i = 0;
-
-        const typeEffect = () => {
-            if (i < text.length) {
-                typewriterText.textContent += text.charAt(i);
-                i++;
-                setTimeout(typeEffect, 60);
-            } else {
-                blinkCursor();
+    if (pageLoader && loaderProgress) {
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 3) + 1; // smooth random increment
+            if (progress > 100) progress = 100;
+            loaderProgress.style.width = progress + '%';
+            if (progress === 100) {
+                clearInterval(interval);
+                pageLoader.classList.add('hidden'); // fade out loader
             }
-        };
-
-        const blinkCursor = () => {
-            typewriterCursor.classList.toggle('active');
-            setTimeout(blinkCursor, 500);
-        };
-
-        typeEffect();
+        }, 20);
     }
 
-    // ===================== MOBILE MENU =====================
-    const mobileBtn = document.getElementById('mobileMenuBtn');
-    const mobileNav = document.getElementById('mainNav');
-    const overlay = document.getElementById('mobileOverlay');
+    // ================= HERO TYPING ANIMATION =================
+    const typewriterText = document.getElementById('typewriterText');
+    const typewriterCursor = document.getElementById('typewriterCursor');
+    const heroTexts = [
+        "Building Excellence in South Sudan",
+        "Premium Residential and Commercial Projects",
+        "Your Vision, Our Expertise",
+        "Transforming Spaces, Building Communities"
+    ];
+    let txtIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+    let typingSpeed = 100;
+    let pauseTime = 1500;
 
-    const toggleMenu = () => {
-        mobileNav.classList.toggle('mobile-active');
-        overlay.classList.toggle('active');
-        document.body.classList.toggle('no-scroll');
-    };
+    function typeWriter() {
+        if (!typewriterText) return;
 
-    mobileBtn.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
-
-    // ===================== MOBILE DROPDOWN =====================
-    const dropdownParents = document.querySelectorAll('#mainNav .has-dropdown');
-
-    dropdownParents.forEach(parent => {
-        const link = parent.querySelector('a');
-        const dropdown = parent.querySelector('.dropdown');
-        const arrow = parent.querySelector('.dropdown-arrow');
-
-        link.addEventListener('click', e => {
-            // prevent redirect on mobile
-            if (window.innerWidth <= 991) {
-                e.preventDefault();
-                parent.classList.toggle('open');
-                if (dropdown.style.maxHeight) {
-                    dropdown.style.maxHeight = null;
-                    if (arrow) arrow.style.transform = 'rotate(0deg)';
-                } else {
-                    dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
-                    if (arrow) arrow.style.transform = 'rotate(180deg)';
-                }
+        const currentText = heroTexts[txtIndex];
+        if (!deleting) {
+            typewriterText.textContent = currentText.slice(0, charIndex + 1);
+            charIndex++;
+            if (charIndex === currentText.length) {
+                deleting = true;
+                setTimeout(typeWriter, pauseTime);
+                return;
             }
-        });
-    });
+        } else {
+            typewriterText.textContent = currentText.slice(0, charIndex - 1);
+            charIndex--;
+            if (charIndex === 0) {
+                deleting = false;
+                txtIndex = (txtIndex + 1) % heroTexts.length;
+            }
+        }
+        typewriterCursor.textContent = "|";
+        setTimeout(typeWriter, deleting ? typingSpeed / 2 : typingSpeed);
+    }
+    typeWriter();
 
-    // ===================== BACK TO TOP =====================
-    const backToTop = document.getElementById('backToTop');
-    window.addEventListener('scroll', () => {
-        backToTop.classList.toggle('show', window.scrollY > 300);
-    });
-
-    backToTop.addEventListener('click', e => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // ===================== FADE IN ON SCROLL =====================
+    // ================= FADE-IN EFFECTS ON SCROLL =================
     const faders = document.querySelectorAll('.fade-in');
     const appearOptions = {
-        threshold: 0.2,
+        threshold: 0.1,
         rootMargin: "0px 0px -50px 0px"
     };
-
-    const appearOnScroll = new IntersectionObserver((entries, appearOnScroll) => {
+    const appearOnScroll = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (!entry.isIntersecting) return;
             entry.target.classList.add('appear');
-            appearOnScroll.unobserve(entry.target);
+            observer.unobserve(entry.target);
         });
     }, appearOptions);
 
@@ -94,24 +76,62 @@ document.addEventListener('DOMContentLoaded', () => {
         appearOnScroll.observe(fader);
     });
 
-});
-
-
-// ===================== PAGE LOADER =====================
-const pageLoader = document.getElementById('pageLoader');
-const loaderProgress = document.getElementById('loaderProgress');
-
-if (pageLoader) {
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += 1; // Increment progress
-        if (loaderProgress) loaderProgress.style.width = progress + '%';
-        if (progress >= 100) {
-            clearInterval(interval);
-            pageLoader.style.opacity = '0';
-            setTimeout(() => {
-                pageLoader.style.display = 'none';
-            }, 500); // fade out smoothly
+    // ================= BACK TO TOP BUTTON =================
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTop.classList.add('show');
+        } else {
+            backToTop.classList.remove('show');
         }
-    }, 10); // speed of loader bar
-}
+    });
+
+    backToTop.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ================= MOBILE MENU & DROPDOWN =================
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mainNav = document.getElementById('mainNav');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+
+    // Toggle mobile menu
+    mobileBtn.addEventListener('click', () => {
+        mainNav.classList.toggle('active');
+        mobileOverlay.classList.toggle('active');
+        document.body.classList.toggle('no-scroll'); // prevent body scroll when menu is open
+    });
+
+    // Close mobile menu when clicking overlay
+    mobileOverlay.addEventListener('click', () => {
+        mainNav.classList.remove('active');
+        mobileOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+    });
+
+    // Handle dropdown menus
+    const dropdownParents = document.querySelectorAll('.has-dropdown > a');
+    dropdownParents.forEach(parent => {
+        parent.addEventListener('click', (e) => {
+            e.preventDefault(); // prevent redirect
+            const dropdown = parent.nextElementSibling;
+            dropdown.classList.toggle('show');
+        });
+    });
+
+    // ================= CUSTOM CURSOR (OPTIONAL) =================
+    const cursor = document.getElementById('cursor');
+    const cursorFollower = document.getElementById('cursorFollower');
+
+    if (cursor && cursorFollower) {
+        document.addEventListener('mousemove', e => {
+            cursor.style.top = e.clientY + "px";
+            cursor.style.left = e.clientX + "px";
+
+            cursorFollower.style.top = e.clientY + "px";
+            cursorFollower.style.left = e.clientX + "px";
+        });
+    }
+
+});
