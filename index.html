@@ -425,20 +425,22 @@
             gap: 10px;
             z-index: 1001;
         }
-        .logo-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--gold);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 16px;
-            color: var(--navy);
-            letter-spacing: -0.5px;
-            flex-shrink: 0;
+        .logo-img {
+    height: 38px;               /* Adjust to match your header balance */
+    width: auto;                /* Maintains aspect ratio */
+    display: block;
+    flex-shrink: 0;
+    border-radius: 4px;         /* Optional, softens the edges */
+    object-fit: contain;
+    transition: var(--transition-fast);
+}
+
+/* On smaller screens, reduce logo size slightly */
+@media (max-width: 768px) {
+    .logo-img {
+        height: 32px;
+    }
+}
         }
         .logo-text {
             display: flex;
@@ -459,6 +461,8 @@
             text-transform: uppercase;
             color: var(--gold);
         }
+
+        
         .nav {
             display: flex;
             align-items: center;
@@ -2180,12 +2184,12 @@
             <div class="container">
                 <div class="header-inner">
                     <a href="#" class="logo" aria-label="Multi Tech Engineering Home">
-                        <div class="logo-icon">MTE</div>
-                        <div class="logo-text">
-                            <span class="logo-name">Multi Tech Engineering</span>
-                            <span class="logo-tagline">Excellence • Reliability • Innovation</span>
-                        </div>
-                    </a>
+    <img src="assets/multilogo.jpeg" alt="Multi Tech Engineering Logo" class="logo-img">
+    <div class="logo-text">
+        <span class="logo-name">Multi Tech Engineering</span>
+        <span class="logo-tagline">Excellence • Reliability • Innovation</span>
+    </div>
+</a>
 
                     <nav class="nav" id="mainNav" role="navigation" aria-label="Main Navigation">
                         <div class="nav-item"><a href="#hero" class="nav-link">Home</a></div>
@@ -2510,7 +2514,7 @@
                     </div>
                     <div class="service-card reveal reveal-delay-2">
                         <div class="service-card-image">
-                            <img src="https://images.unsplash.com/photo-1581092162384-6b58a0e2b3f2?auto=format&fit=crop&w=600&q=80" alt="Drilling borehole and well services by MTE" loading="lazy">
+                            <img src="assets/multibar.png" alt="Drilling borehole and well services by MTE" loading="lazy">
                             <div class="service-card-overlay"></div>
                         </div>
                         <div class="service-card-body">
@@ -2618,7 +2622,7 @@
                     </div>
                     <div class="project-card reveal reveal-delay-4">
                         <div class="project-card-inner">
-                            <img src="https://images.unsplash.com/photo-1581092162384-6b58a0e2b3f2?auto=format&fit=crop&w=600&q=80" alt="Borehole drilling project by Multi Tech Engineering" loading="lazy">
+                            <img src="assets/multibar.png" alt="Borehole drilling project by Multi Tech Engineering" loading="lazy">
                             <div class="project-card-overlay"></div>
                             <div class="project-card-content">
                                 <span class="project-card-tag">Water</span>
